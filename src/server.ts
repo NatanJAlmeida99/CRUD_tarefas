@@ -16,7 +16,7 @@ interface Tarefa {
 const tarefas: Tarefa[] = [
   {
     id: 1,
-    title: "Lavar a louça",
+    title: "Estudar TypeScript",
     description: "Revisar interfaces, tipos e generics",
     completed_at: null,
     created_at: new Date(),
@@ -32,11 +32,32 @@ const tarefas: Tarefa[] = [
   },
 ];
 
-app.get("/tarefa", (req: Request, res: Response) => {
-  res.status(200).json({ tarefas });
+app.get("/tarefas", (req: Request, res: Response) => {
+  const { title, description } = req.query;
+
+  const hasTitle = typeof title === "string" && title.trim() !== "";
+  const hasDescription =
+    typeof description === "string" && description.trim() !== "";
+  let resultado = tarefas;
+
+  if (hasTitle) {
+    resultado = resultado.filter((t) => {
+      return t.title.toLowerCase().includes(title.trim().toLowerCase());
+    });
+  }
+
+  if (hasDescription) {
+    resultado = resultado.filter((t) => {
+      return t.description
+        .toLowerCase()
+        .includes(description.trim().toLowerCase());
+    });
+  }
+
+  res.status(200).json(resultado);
 });
 
-app.post("/tarefa", (req: Request, res: Response) => {
+app.post("/tarefas", (req: Request, res: Response) => {
   const { title, description } = req.body;
 
   if (typeof title !== "string" || !title.trim()) {
@@ -49,8 +70,8 @@ app.post("/tarefa", (req: Request, res: Response) => {
 
   const newTask: Tarefa = {
     id: tarefas.length + 1,
-    title,
-    description,
+    title: title.trim(),
+    description: description.trim(),
     completed_at: null,
     created_at: new Date(),
     updated_at: new Date(),
@@ -58,7 +79,48 @@ app.post("/tarefa", (req: Request, res: Response) => {
 
   tarefas.push(newTask);
 
-  return res.status(201).json({ newTask });
+  return res.status(201).json(newTask);
+});
+
+app.put("/tarefas/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ erro: "ID inválido" });
+  }
+
+  const { title, description } = req.body;
+
+  const hasTitle = title !== undefined;
+  const hasDescription = description !== undefined;
+
+  if (!hasTitle && !hasDescription) {
+    return res
+      .status(400)
+      .json({ erro: "Envie pelo menos title ou description" });
+  }
+
+  if (hasTitle && (typeof title !== "string" || !title.trim())) {
+    return res.status(400).json({ erro: "Title inválido" });
+  }
+
+  if (
+    hasDescription &&
+    (typeof description !== "string" || !description.trim())
+  ) {
+    return res.status(400).json({ erro: "Description inválida" });
+  }
+
+  const tarefa = tarefas.find((t) => t.id === id);
+
+  if (!tarefa) {
+    return res.status(404).json({ erro: "Tarefa não encontrada" });
+  }
+
+  if (hasTitle) tarefa.title = title.trim();
+  if (hasDescription) tarefa.description = description.trim();
+
+  return res.status(200).json(tarefa);
 });
 
 app.listen(PORT, () => {
