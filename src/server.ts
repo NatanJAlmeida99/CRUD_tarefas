@@ -13,6 +13,8 @@ interface Tarefa {
   updated_at: Date;
 }
 
+let nextId = 3;
+
 const tarefas: Tarefa[] = [
   {
     id: 1,
@@ -69,7 +71,7 @@ app.post("/tarefas", (req: Request, res: Response) => {
   }
 
   const newTask: Tarefa = {
-    id: tarefas.length + 1,
+    id: nextId++,
     title: title.trim(),
     description: description.trim(),
     completed_at: null,
@@ -119,6 +121,43 @@ app.put("/tarefas/:id", (req: Request, res: Response) => {
 
   if (hasTitle) tarefa.title = title.trim();
   if (hasDescription) tarefa.description = description.trim();
+  tarefa.updated_at = new Date();
+
+  return res.status(200).json(tarefa);
+});
+
+app.delete("/tarefas/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ erro: "ID inválido" });
+  }
+
+  const index = tarefas.findIndex((t) => t.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ erro: "Tarefa não encontrada" });
+  }
+
+  tarefas.splice(index, 1);
+  return res.status(204).send();
+});
+
+app.patch("/tarefas/:id/complete", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ erro: "ID inválido" });
+  }
+
+  const tarefa = tarefas.find((t) => t.id === id);
+
+  if (!tarefa) {
+    return res.status(404).json({ erro: "Tarefa não encontrada" });
+  }
+
+  tarefa.completed_at = tarefa.completed_at ? null : new Date();
+  tarefa.updated_at = new Date();
 
   return res.status(200).json(tarefa);
 });
