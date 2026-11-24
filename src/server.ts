@@ -1,17 +1,12 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
+import { tarefaRoutes } from "./routes/tarefaRoutes.js"
 
 const app = express();
 const PORT = 3000;
+
 app.use(express.json());
 
-interface Tarefa {
-  id: number;
-  title: string;
-  description: string;
-  completed_at: Date | null;
-  created_at: Date;
-  updated_at: Date;
-}
+app.use("/tarefas", tarefaRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
