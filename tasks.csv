@@ -1,0 +1,16 @@
+title,description
+Configurar ambiente Docker,Subir container do banco de dados PostgreSQL local
+Criar rotas de autenticacao,Implementar login e geracao de token JWT
+Escrever testes unitarios,Cobrir regras de negocio do TarefaController
+Refatorar validacoes,Padronizar mensagens de erro HTTP 400 e 404
+Atualizar documentacao,Revisar exemplos de requisicao no README do projeto
+Pagar fatura do cartao,Conferir lancamentos no aplicativo do banco antes do vencimento
+Agendar consulta odontologica,Ligar na clinica para marcar limpeza semestral
+Comprar racao e areia,Passar no pet shop perto de casa no fim da tarde
+Organizar arquivos da nuvem,Separar comprovantes fiscais e documentos pessoais em pastas
+Preparar marmitas da semana,Cozinhar frango grelhado com legumes e arroz integral
+Pagar fatura do cartao,Conferir lancamentos no aplicativo do banco antes do vencimento
+Agendar consulta odontologica,Ligar na clinica para marcar limpeza semestral
+Comprar racao e areia,Passar no pet shop perto de casa no fim da tarde
+Organizar arquivos da nuvem,Separar comprovantes fiscais e documentos pessoais em pastas
+Preparar marmitas da semana,Cozinhar frango grelhado com legumes e arroz integral
